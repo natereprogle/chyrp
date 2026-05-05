@@ -513,7 +513,7 @@
     return {
       position: get('position'),
       pauseOnHover: get('pauseOnHover') === 'true',
-      sound: get('sound') === 'true' ? true : get('sound') === 'false' ? false : get('sound'),
+      sound: get('sound') === 'false' ? true : get('sound') === 'true' ? false : get('sound'),
     };
   }
   bind('configure-apply', function () {
@@ -527,11 +527,11 @@
   bind('configure-reset', function () {
     document.querySelector('[data-config="position"]').value = 'top-right';
     document.querySelector('[data-config="pauseOnHover"]').value = 'true';
-    document.querySelector('[data-config="sound"]').value = 'false';
+    document.querySelector('[data-config="sound"]').value = 'true';
     configure({
       position: 'top-right',
       pauseOnHover: true,
-      sound: false,
+      sound: true,
     });
     chyrp.info('Reset to defaults');
   });
