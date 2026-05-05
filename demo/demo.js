@@ -513,7 +513,7 @@
     return {
       position: get('position'),
       pauseOnHover: get('pauseOnHover') === 'true',
-      sound: get('sound') === 'false' ? true : get('sound') === 'true' ? false : get('sound'),
+      sound: get('sound') === 'true' ? true : get('sound') === 'false' ? false : get('sound'),
     };
   }
   bind('configure-apply', function () {
