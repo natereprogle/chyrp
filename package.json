@@ -1,47 +1,68 @@
 {
   "name": "chyrp",
-  "version": "0.0.0",
-  "packageManager": "pnpm@10.8.1",
-  "description": "Reserved package name for a future browser extension messaging library.",
-  "main": "./dist/chyrp.js",
-  "types": "./dist/chyrp.d.ts",
-  "module": "./dist/chyrp.mjs",
-  "scripts": {
-    "build": "tsup",
-    "watch": "tsup",
-    "lint": "eslint"
+  "version": "0.1.0",
+  "description": "Toasts that get your attention. Dependency-free toast notification library with stacking, swipe-to-dismiss, sounds, and promise integration.",
+  "type": "module",
+  "author": "Nate Reprogle",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/natereprogle/chyrp"
   },
-  "devDependencies": {
-    "@eslint/js": "^9.25.0",
-    "@stylistic/eslint-plugin-ts": "^4.2.0",
-    "@types/webextension-polyfill": "^0.12.3",
-    "@typescript-eslint/parser": "^8.30.1",
-    "eslint": "^9.25.0",
-    "globals": "^16.0.0",
-    "tsup": "^8.4.0",
-    "type-fest": "^4.40.0",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.30.1",
-    "webextension-polyfill": "^0.12.0"
+  "bugs": {
+    "url": "https://github.com/natereprogle/chyrp/issues"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./style.css": "./dist/style.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "build:minify": "tsdown --minify",
+    "build:dev": "tsdown --watch",
+    "demo": "concurrently -k -n build,serve \"npm:build:dev\" \"serve -l 3000\"",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run format:check && npm run build:minify"
   },
   "keywords": [
-    "webextension",
-    "messaging",
-    "browser",
-    "typescript",
-    "chrome",
-    "firefox",
-    "edge"
+    "toast",
+    "notification",
+    "alert",
+    "snackbar",
+    "popup",
+    "ui"
   ],
-  "type": "module",
-  "author": "Nate Reprogle <nate@reprogle.org> (https://reprogle.org)",
-  "license": "MPL-2.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^9.2.1",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "jiti": "^2.6.1",
+    "prettier": "^3.8.3",
+    "serve": "^14.2.6",
+    "tsdown": "^0.21.10",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.59.2"
   },
-  "dependencies": {
-    "tiny-uid": "^1.1.2"
+  "publishConfig": {
+    "access": "public"
   }
 }

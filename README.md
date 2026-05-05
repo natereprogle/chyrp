@@ -2,73 +2,242 @@
 <img src="./assets/banner.png" alt="Logo">
 </div>
 
-# What is Chyrp?
+# chyrp
 
-Chyrp (Pronounced "Chirp") is a web extension library which wraps messaging APIs,
-making it drop-dead easy to send messages between extension contexts.
+**Toasts that get your attention.**
 
-There are dozens of libraries out there that do this, but they are either outdated or
-complicated. Chyrp is simple, modern, and easy to use.
+Chyrp (Pronounced "Chirp") is a tiny, dependency-free toast notification library. Ships with stacking, swipe-to-dismiss, pause-on-hover, sound, promise integration, and a determinate progress donut for loading states — all in around 30 kB of unminified, sourcemapped JS.
 
-Chyrp revolves around the concept of "brokers". A broker is an object that registers
-adapters, which handle communications between contexts. Here's an example:
+- Zero runtime dependencies
+- ESM, CJS, and IIFE bundles
+- Full TypeScript types
+- Mobile-aware (auto-positions to `bottom-center`, larger hit targets)
+- Respects `prefers-reduced-motion`
+- Dark mode support via `prefers-color-scheme` and manual override
 
-```typescript
-import {Broker} from "../../chyrp/src";
-
-// Events are defined as a Record of event names to their payloads
-// Thanks to TypeScript, Chyrp ensures type safety for your events!
-interface ChyrpEvents {
-    "hello": { who: string };
-    "reply": { msg: string, luckyNumber: number };
-}
-
-//                                                 👇🏻 Magic happens with adapters!
-const broker = new Broker<ChyrpEvents>().withContentScriptAdapter();
-
-console.log("🔥 Subscribing to \"hello\" event");
-broker.subscribe("hello", (event) => {
-    console.log("Received a hello event!", event);
-    broker.publish("reply", { msg: "Reply from hello event subscriber!", luckyNumber: 13 });
-});
-
-console.log("🔥 Subscribing to \"reply\" event");
-broker.subscribe("reply", (event) => {
-    console.log("Received a reply event!");
-    console.log(event);
-});
-```
-
-You'll notice we aren't explicitly making any calls to `browser.runtime.onMessage`, `onMessageExternal`, or anything
-like that.
-Quite frankly, _who cares_ how the messages are sent or received? Chyrp abstracts that away for you, which is the beauty
-of it!
-
-Subscriptions can be created so they only listen to messages from certain contexts, and a Broker can have multiple
-adapters (Although this is not recommended!). As well, messages can be published to only specific contexts
-
-```typescript
-// Subscribe to messages from the content script only
-broker.subscribe("hello", (event) => {
-    console.log("Received a hello event from a content script!", event);
-}, ["content-script"]);
-
-// Publish a message to the content script only
-broker.publish(
-    "hello",
-    { msg: "This should only be received by subscribers listening to the '*' or 'content-script' contexts" },
-    ["content-script"]
-);
-```
-
-# Installation
-
-Chyrp is available on npm, so you can install it with your favorite package manager:
+## Install
 
 ```bash
 npm install chyrp
-# or
-yarn add chyrp
-# or
-pnpm add chyrp
 ```
+
+## Quick start
+
+```ts
+import { chyrp } from 'chyrp';
+import 'chyrp/style.css';
+
+chyrp({ body: 'Hello world' });
+
+chyrp.info('Saved');
+chyrp.warning('Disk almost full');
+chyrp.error('Upload failed');
+chyrp.loading('Uploading…');
+```
+
+The CSS import is required — it's a side-effect import that injects the toast container styles. If you bundle CSS separately (e.g. CSS modules + a stylesheet pipeline), import it once at your app entry.
+
+## API
+
+### `chyrp(opts)` and convenience methods
+
+```ts
+chyrp({ title: 'Saved', body: 'Your changes are live', style: 'info' });
+
+chyrp.info('Saved', { title: 'Success' });
+chyrp.warning('Disk almost full');
+chyrp.error('Upload failed', { persistent: true });
+chyrp.loading('Uploading…', { max: 100, value: 0 });
+```
+
+All forms return a `ToastHandle`:
+
+```ts
+interface ToastHandle {
+  dismiss(): void;
+  update(opts: ToastOptions): ToastHandle;
+}
+```
+
+### Promise integration
+
+```ts
+chyrp.promise(api.saveUser(user), {
+  loading: 'Saving…',
+  success: (user) => `Saved ${user.name}`,
+  error:   (err)  => ({ title: 'Save failed', body: err.message }),
+});
+```
+
+Each branch may be a string (used as `body`), an options object, or a function returning either.
+
+### Determinate progress
+
+```ts
+const handle = chyrp.loading('Uploading', { max: 100, value: 0 });
+
+uploader.on('progress', (n) => handle.update({ value: n }));
+uploader.on('done',     ()  => handle.update({ style: 'info', body: 'Done', timeout: 2000 }));
+```
+
+When `max > 0`, the icon is a donut filled in proportion to `value / max`. Otherwise it's an indeterminate spinner.
+
+### Channels
+
+Group related toasts under a name and dismiss them together. The channel also renders as a small italic label in the corner of the toast.
+
+```ts
+import { chyrp, dismissChannel } from 'chyrp';
+
+chyrp.info('Connection lost', { channel: 'network', persistent: true });
+chyrp.info('Retrying…',        { channel: 'network' });
+
+// later, when the network comes back:
+dismissChannel('network');
+```
+
+### Action buttons
+
+```ts
+chyrp({
+  title: 'File deleted',
+  body: 'document.pdf was moved to trash',
+  actions: [
+    { label: 'Undo', style: 'primary', onClick: () => restore() },
+    { label: 'Dismiss' },
+  ],
+});
+```
+
+`onClick` returning `false` keeps the toast open; otherwise it auto-dismisses.
+
+### Configuration
+
+```ts
+import { configure } from 'chyrp';
+
+configure({
+  position: 'bottom-right',
+  pauseOnHover: true,
+  sound: false,           // true | 'gentle' | 'alert' | 'success' | 'error' | <url>
+});
+```
+
+Per-call options always win over global defaults.
+
+### Sound
+
+```ts
+chyrp.error('Save failed', { sound: true });        // style-aware default
+chyrp.info('Saved',        { sound: 'success' });   // named chime
+chyrp.info('Custom',       { sound: '/ding.mp3' }); // custom URL
+```
+
+Named chimes are synthesized with the Web Audio API, so they have no asset dependency.
+
+### Dismiss helpers
+
+```ts
+import { dismissAll, dismissChannel } from 'chyrp';
+
+dismissAll();              // dismiss every live toast
+dismissChannel('network'); // dismiss everything tagged 'network'
+```
+
+### Optional `alert()` override
+
+This is opt-in because libraries shouldn't monkey-patch globals on import:
+
+```ts
+import { interceptAlert } from 'chyrp';
+
+const restore = interceptAlert();
+window.alert('hello'); // shows as an info toast
+
+restore(); // put the native alert back
+```
+
+## CDN / `<script>` usage
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/chyrp/dist/style.css" />
+<script src="https://unpkg.com/chyrp/dist/index.iife.js"></script>
+<script>
+  Chyrp.chyrp.info('Hello');
+</script>
+```
+
+## Options reference
+
+| Option         | Type                                                                                           | Default     | Notes                                              |
+| -------------- | ---------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------------- |
+| `title`        | `string`                                                                                       | `''`        | Bold heading above the body                        |
+| `body`         | `string`                                                                                       | `''`        | Main message                                       |
+| `style`        | `'info' \| 'warning' \| 'error' \| 'loading'`                                                  | `'info'`    | Visual style and default icon                      |
+| `timeout`      | `number`                                                                                       | `4000`      | Ms before auto-dismiss; `0` disables               |
+| `persistent`   | `boolean`                                                                                      | `false`     | Equivalent to `timeout: 0`                         |
+| `debounce`     | `number`                                                                                       | `100`       | Ms to suppress identical follow-up toasts          |
+| `swipe`        | `boolean`                                                                                      | `true`      | Allow swipe-to-dismiss                             |
+| `pauseOnHover` | `boolean`                                                                                      | `true`      | Pause timer on pointer hover (desktop only)        |
+| `position`     | `'top-right' \| 'top-left' \| 'top-center' \| 'bottom-right' \| 'bottom-left' \| 'bottom-center'` | `'top-right'` | Mobile always forces `bottom-center`              |
+| `channel`      | `string`                                                                                       | —           | Tag for grouping; rendered as a label              |
+| `icon`         | `string \| HTMLElement \| false`                                                               | —           | Custom icon (text, cloned DOM node, or hide)       |
+| `actions`      | `ToastAction[]`                                                                                | —           | Buttons rendered below the body                    |
+| `sound`        | `boolean \| 'gentle' \| 'alert' \| 'success' \| 'error' \| string`                            | `false`     | Named chime, URL, or `true` for style default      |
+| `max`          | `number`                                                                                       | —           | (loading) total work units for determinate donut   |
+| `value`        | `number`                                                                                       | `0`         | (loading) current progress                         |
+
+## Accessibility
+
+- Toasts are `role="button"` with `tabindex="0"`. Enter / Space dismiss.
+- Keyboard focus pauses the auto-dismiss timer (same as hover).
+- The overflow pill is keyboard-activatable.
+- All animation durations collapse to fades when `prefers-reduced-motion: reduce` is set.
+
+## Dark mode
+
+Toasts automatically adapt to dark backgrounds when the user's OS reports `prefers-color-scheme: dark`. All colors are defined as CSS custom properties prefixed with `--tt-`, so you can override any of them.
+
+To force a specific theme regardless of system preference, add a class to the `<html>` element:
+
+```html
+<!-- Force dark mode -->
+<html class="dark">
+
+<!-- Force light mode -->
+<html class="light">
+
+<!-- Follow system preference (default) -->
+<html>
+```
+
+You can also override individual variables to customize the toast appearance:
+
+```css
+:root {
+  --tt-bg: #1a1a2e;
+  --tt-title-color: #eee;
+  --tt-body-color: #ccc;
+  --tt-info: #00d2ff;
+}
+```
+
+## Browser support
+
+Targets ES2022. Pointer events are required for swipe-to-dismiss; if `PointerEvent` is unavailable, swipe is disabled and click-to-dismiss still works.
+
+## Demo
+
+A full interactive demo + docs site lives under [`demo/`](demo/). After cloning:
+
+```bash
+npm install
+npm run build           # produces dist/ that the demo loads
+open demo/index.html    # or run `npm run demo` to serve at http://localhost:3000/demo/
+```
+
+Every feature in this README has a runnable example there.
+
+## License
+
+MIT
