@@ -11,6 +11,7 @@
   "bugs": {
     "url": "https://github.com/natereprogle/chyrp/issues"
   },
+  "homepage": "https://natereprogle.github.io/chyrp/demo/",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
