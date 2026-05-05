@@ -1,6 +1,6 @@
 {
   "name": "chyrp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Toasts that get your attention. Dependency-free toast notification library with stacking, swipe-to-dismiss, sounds, and promise integration.",
   "type": "module",
   "author": "Nate Reprogle",
