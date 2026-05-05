@@ -9,11 +9,13 @@
 Chyrp (Pronounced "Chirp") is a tiny, dependency-free toast notification library. Ships with stacking, swipe-to-dismiss, pause-on-hover, sound, promise integration, and a determinate progress donut for loading states — all in around 30 kB of unminified, sourcemapped JS.
 
 - Zero runtime dependencies
-- ESM, CJS, and IIFE bundles
+- ESM, CJS, and IIFE bundles (~6kB gzipped/ea.\*)
 - Full TypeScript types
 - Mobile-aware (auto-positions to `bottom-center`, larger hit targets)
 - Respects `prefers-reduced-motion`
 - Dark mode support via `prefers-color-scheme` and manual override
+
+<sup>\* Not including CSS or optional source maps. CSS is mandatory and adds an additional 3 kB (gzipped) to overall size</sup>
 
 ## Install
 
