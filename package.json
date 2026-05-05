@@ -6,7 +6,7 @@
   "author": "Nate Reprogle",
   "repository": {
     "type": "git",
-    "url": "https://github.com/natereprogle/chyrp"
+    "url": "git+https://github.com/natereprogle/chyrp.git"
   },
   "bugs": {
     "url": "https://github.com/natereprogle/chyrp/issues"

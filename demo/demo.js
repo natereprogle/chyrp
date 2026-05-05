@@ -519,7 +519,7 @@
   bind('configure-apply', function () {
     var cfg = readConfig();
     configure(cfg);
-    chyrp.info('Defaults applied', { sound: 'gentle' });
+    chyrp.info('Defaults applied');
   });
   bind('configure-test', function () {
     chyrp.info('Test toast — uses current defaults');
