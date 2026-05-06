@@ -95,10 +95,7 @@ export class ToastHandleImpl implements ToastHandle {
    */
   private runReleaseWithFloatUp(el: HTMLElement): void {
     const container = el.parentElement;
-    if (
-      container &&
-      container.classList.contains('toast-container')
-    ) {
+    if (container && container.classList.contains('toast-container')) {
       flipFloatUp(container, el, () => this.hooks.release(this));
     } else {
       this.hooks.release(this);

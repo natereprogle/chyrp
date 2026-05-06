@@ -51,8 +51,7 @@ const PRESETS: Record<ChimePreset, ChimeNote[]> = {
 
 function playNotes(notes: ChimePreset | ChimeNote[]): void {
   // If the notes argument is a preset name, look up the preset (with overrides) before playing.
-  if (typeof notes === 'string')
-    notes = presetOverrides[notes] ?? PRESETS[notes];
+  if (typeof notes === 'string') notes = presetOverrides[notes] ?? PRESETS[notes];
 
   const ctx = getAudioContext();
   if (!ctx) return;

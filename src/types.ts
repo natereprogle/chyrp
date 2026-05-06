@@ -19,7 +19,14 @@ export type ToastPosition =
   | 'bottom-left'
   | 'bottom-center';
 
-export type SoundOption = boolean | 'gentle' | 'alert' | 'success' | 'error' | ChimeNote[] | (string & {});
+export type SoundOption =
+  | boolean
+  | 'gentle'
+  | 'alert'
+  | 'success'
+  | 'error'
+  | ChimeNote[]
+  | (string & {});
 
 export type IconOption = string | HTMLElement | false;
 
