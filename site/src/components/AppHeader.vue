@@ -64,8 +64,10 @@ const toggleMenu = () => {
   top: 0;
   z-index: 50;
   background: rgba(250, 250, 250, 0.85);
-  backdrop-filter: saturate(180%) blur(12px);
+  /* -webkit-backdrop-filter must be before backdrop-filter */
+  /* https://github.com/parcel-bundler/lightningcss/issues/785 */
   -webkit-backdrop-filter: saturate(180%) blur(12px);
+  backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--border);
 }
 
