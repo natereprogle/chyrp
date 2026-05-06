@@ -56,6 +56,8 @@ export interface ToastOptions {
   actions?: ToastAction[];
   /** Sound preset, URL, or true for style-based default. */
   sound?: SoundOption;
+  /** Replay sound when a style change happens via handle.update({ style }). */
+  resound?: boolean;
   /** (loading) Total work units for determinate donut. */
   max?: number;
   /** (loading) Current progress. */
@@ -66,6 +68,8 @@ export interface ToastConfig {
   position?: ToastPosition;
   pauseOnHover?: boolean;
   sound?: SoundOption;
+  /** Global default for replaying sound when update() changes style. */
+  resound?: boolean;
   /** Override built-in chime presets. Unset presets keep their defaults. */
   soundPresets?: Partial<Record<'success' | 'error' | 'alert' | 'gentle', ChimeNote[]>>;
 }

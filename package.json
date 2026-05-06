@@ -1,6 +1,6 @@
 {
   "name": "chyrp",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Toasts that get your attention. Dependency-free toast notification library with stacking, swipe-to-dismiss, sounds, and promise integration.",
   "type": "module",
   "author": "Nate Reprogle",
@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/natereprogle/chyrp/issues"
   },
-  "homepage": "https://natereprogle.github.io/chyrp/demo/",
+  "homepage": "https://natereprogle.github.io/chyrp/",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

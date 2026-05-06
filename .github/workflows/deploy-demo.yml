@@ -1,8 +1,9 @@
-name: Deploy demo to GitHub Pages
+name: Deploy site to GitHub Pages
 
 on:
   push:
     branches:
+      - main
       - master
   workflow_dispatch:
 
@@ -30,26 +31,30 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            site/package-lock.json
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: npm install
 
-      - name: Build library
-        run: npm run build
+      - name: Install site dependencies
+        run: npm install
+        working-directory: site
 
-      - name: Stage Pages output
-        run: |
-          mkdir -p _site
-          cp index.html _site/
-          cp -r demo _site/
-          cp -r dist _site/
-          cp -r assets _site/
+      - name: Build Vue site
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+        run: npm run build
+        working-directory: site
+
+      - name: Add SPA 404 fallback
+        run: cp site/dist/index.html site/dist/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: ./_site
+          path: site/dist
 
       - name: Deploy to GitHub Pages
         id: deployment

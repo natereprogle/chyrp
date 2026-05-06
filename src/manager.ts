@@ -46,6 +46,7 @@ class ToastManager implements HandleCleanupHooks {
     position: 'top-right',
     pauseOnHover: true,
     sound: true,
+    resound: false,
   };
 
   // ---------- HandleCleanupHooks ----------
@@ -69,6 +70,19 @@ class ToastManager implements HandleCleanupHooks {
       this.liveToasts.splice(idx, 1);
       this.reflowVisibility();
     }
+  }
+
+  /**
+   * Optionally replay a toast sound when update() changes style.
+   *
+   * @param handle - The updated toast handle.
+   * @param nextStyle - The style after update.
+   */
+  handleStyleUpdateSound(handle: ToastHandleImpl, nextStyle: ToastStyle): void {
+    const shouldResound = handle.resound ?? this.config.resound;
+    if (!shouldResound) return;
+    const soundOpt = handle.sound !== undefined ? handle.sound : this.config.sound;
+    playSound(soundOpt, nextStyle);
   }
 
   // ---------- Public API ----------
@@ -150,6 +164,8 @@ class ToastManager implements HandleCleanupHooks {
     handle.fingerprint = fp;
     handle.channel = channel;
     handle.position = position;
+    handle.sound = opts.sound;
+    handle.resound = opts.resound;
     handle.max = hasDeterminate ? (opts.max as number) : null;
     handle.value = initialValue;
 
@@ -245,6 +261,9 @@ class ToastManager implements HandleCleanupHooks {
     if (opts.sound !== undefined) {
       this.config.sound = opts.sound;
     }
+    if (typeof opts.resound === 'boolean') {
+      this.config.resound = opts.resound;
+    }
     if (opts.soundPresets) {
       setSoundPresets(opts.soundPresets);
     }
@@ -255,6 +274,10 @@ class ToastManager implements HandleCleanupHooks {
   /**
    * Wrap a promise: show a loading toast immediately, then update to
    * success or error when the promise settles.
+   *
+   * If you need support for modifying standard toast options, you should
+   * ***not*** use this method. This wrapper lacks support for nearly all
+   * of the {@link ToastOptions} that the main {@link show} method provides.
    *
    * @param promise - The promise to track.
    * @param opts - Labels for loading, success, and error states.

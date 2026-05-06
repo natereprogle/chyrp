@@ -2,7 +2,7 @@ import { buildActions } from './actions';
 import { EXIT_ANIMATION_MS, ICONS } from './constants';
 import { flipFloatUp } from './flip';
 import { renderIcon, renderLoadingIcon, setDonutProgress } from './icons';
-import type { ToastHandle, ToastOptions, ToastPosition, ToastStyle } from './types';
+import type { SoundOption, ToastHandle, ToastOptions, ToastPosition, ToastStyle } from './types';
 
 /**
  * Hooks called by a {@link ToastHandleImpl} during teardown.
@@ -14,6 +14,14 @@ export interface HandleCleanupHooks {
    * @param handle - The handle being released.
    */
   release(handle: ToastHandleImpl): void;
+
+  /**
+   * Called when update() changes a toast's style.
+   *
+   * @param handle - The updated handle.
+   * @param nextStyle - The style after update.
+   */
+  handleStyleUpdateSound(handle: ToastHandleImpl, nextStyle: ToastStyle): void;
 }
 
 const STYLE_PATTERN = /toast-(info|warning|error|loading)/g;
@@ -32,6 +40,8 @@ export class ToastHandleImpl implements ToastHandle {
   value = 0;
   pendingTimeout: number | null = null;
   timerStarted = false;
+  sound: SoundOption | undefined = undefined;
+  resound: boolean | undefined = undefined;
 
   timeoutId: number | null = null;
   dismissed = false;
@@ -136,6 +146,14 @@ export class ToastHandleImpl implements ToastHandle {
     const match = el.className.match(STYLE_PATTERN_SINGLE);
     const currentStyle = (match?.[1] as ToastStyle | undefined) ?? 'info';
     const nextStyle: ToastStyle = opts.style ?? currentStyle;
+    const styleChanged = opts.style !== undefined && nextStyle !== currentStyle;
+
+    if (opts.sound !== undefined) {
+      this.sound = opts.sound;
+    }
+    if (opts.resound !== undefined) {
+      this.resound = opts.resound;
+    }
 
     if (opts.style) {
       el.className = el.className.replace(STYLE_PATTERN, '').trim();
@@ -204,6 +222,11 @@ export class ToastHandleImpl implements ToastHandle {
         this.timerStarted = true;
       }
     }
+
+    if (styleChanged) {
+      this.hooks.handleStyleUpdateSound(this, nextStyle);
+    }
+
     return this;
   }
 

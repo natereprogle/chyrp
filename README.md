@@ -122,6 +122,7 @@ configure({
   position: 'bottom-right',
   pauseOnHover: true,
   sound: false,           // true | 'gentle' | 'alert' | 'success' | 'error' | <url>
+  resound: true,          // replay sound when handle.update({ style }) changes style
 });
 ```
 
@@ -136,6 +137,19 @@ chyrp.info('Custom',       { sound: '/ding.mp3' }); // custom URL
 ```
 
 Named chimes are synthesized with the Web Audio API, so they have no asset dependency.
+
+Enable style-change replay per toast:
+
+```ts
+const h = chyrp.loading('Uploading', { sound: true, resound: true });
+h.update({ style: 'info', body: 'Upload complete' }); // plays style-mapped success chime
+```
+
+Or set it globally:
+
+```ts
+configure({ resound: true });
+```
 
 ### Dismiss helpers
 
@@ -185,7 +199,8 @@ restore(); // put the native alert back
 | `channel`      | `string`                                                                                       | —           | Tag for grouping; rendered as a label              |
 | `icon`         | `string \| HTMLElement \| false`                                                               | —           | Custom icon (text, cloned DOM node, or hide)       |
 | `actions`      | `ToastAction[]`                                                                                | —           | Buttons rendered below the body                    |
-| `sound`        | `boolean \| 'gentle' \| 'alert' \| 'success' \| 'error' \| string`                            | `false`     | Named chime, URL, or `true` for style default      |
+| `sound`        | `boolean \| 'gentle' \| 'alert' \| 'success' \| 'error' \| string`                            | `true`      | Named chime, URL, or `true` for style default      |
+| `resound`      | `boolean`                                                                                      | `false`     | Replay sound when `handle.update({ style })` changes style |
 | `max`          | `number`                                                                                       | —           | (loading) total work units for determinate donut   |
 | `value`        | `number`                                                                                       | `0`         | (loading) current progress                         |
 
