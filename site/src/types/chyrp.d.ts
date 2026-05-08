@@ -3,7 +3,8 @@ declare module 'chyrp' {
     frequency: number
     startOffset: number
     duration: number
-    amplitude: number
+    amplitude: number,
+    oscillatorType?: Exclude<OscillatorType, 'custom'>
   }
 
   export type ToastStyle = 'info' | 'warning' | 'error' | 'loading'

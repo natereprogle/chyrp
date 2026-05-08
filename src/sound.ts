@@ -56,11 +56,11 @@ function playNotes(notes: ChimePreset | ChimeNote[]): void {
   const ctx = getAudioContext();
   if (!ctx) return;
   const now = ctx.currentTime;
-  for (const { frequency, startOffset, duration, amplitude } of notes) {
+  for (const { frequency, startOffset, duration, amplitude, oscillatorType } of notes) {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.frequency.value = frequency;
-    osc.type = 'sine';
+    osc.type = oscillatorType ?? 'sine';
     // Quick attack, soft decay — avoids click artifacts at start/stop.
     gain.gain.setValueAtTime(0, now + startOffset);
     gain.gain.linearRampToValueAtTime(amplitude, now + startOffset + 0.005);

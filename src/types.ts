@@ -7,6 +7,8 @@ export interface ChimeNote {
   duration: number;
   /** Peak amplitude (0–1). */
   amplitude: number;
+  /** Waveform type. If not defined, defaults to 'sine'. */
+  oscillatorType?: Exclude<OscillatorType, 'custom'>;
 }
 
 export type ToastStyle = 'info' | 'warning' | 'error' | 'loading';

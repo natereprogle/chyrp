@@ -50,8 +50,8 @@ const toggleMenu = () => {
         <router-link to="/">Home</router-link>
         <router-link to="/builder">Builder</router-link>
         <router-link to="/docs">Docs</router-link>
-        <a href="https://github.com/natereprogle/chyrp" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.npmjs.com/package/chyrp" target="_blank" rel="noopener">npm</a>
+        <a href="https://github.com/natereprogle/chyrp" target="_blank" rel="noopener" data-external-link>GitHub</a>
+        <a href="https://www.npmjs.com/package/chyrp" target="_blank" rel="noopener" data-external-link>npm</a>
         <ThemeToggle />
       </nav>
     </div>

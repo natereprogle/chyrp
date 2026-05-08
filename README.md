@@ -185,24 +185,24 @@ restore(); // put the native alert back
 
 ## Options reference
 
-| Option         | Type                                                                                           | Default     | Notes                                              |
-| -------------- | ---------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------------- |
-| `title`        | `string`                                                                                       | `''`        | Bold heading above the body                        |
-| `body`         | `string`                                                                                       | `''`        | Main message                                       |
-| `style`        | `'info' \| 'warning' \| 'error' \| 'loading'`                                                  | `'info'`    | Visual style and default icon                      |
-| `timeout`      | `number`                                                                                       | `4000`      | Ms before auto-dismiss; `0` disables               |
-| `persistent`   | `boolean`                                                                                      | `false`     | Equivalent to `timeout: 0`                         |
-| `debounce`     | `number`                                                                                       | `100`       | Ms to suppress identical follow-up toasts          |
-| `swipe`        | `boolean`                                                                                      | `true`      | Allow swipe-to-dismiss                             |
-| `pauseOnHover` | `boolean`                                                                                      | `true`      | Pause timer on pointer hover (desktop only)        |
-| `position`     | `'top-right' \| 'top-left' \| 'top-center' \| 'bottom-right' \| 'bottom-left' \| 'bottom-center'` | `'top-right'` | Mobile always forces `bottom-center`              |
-| `channel`      | `string`                                                                                       | —           | Tag for grouping; rendered as a label              |
-| `icon`         | `string \| HTMLElement \| false`                                                               | —           | Custom icon (text, cloned DOM node, or hide)       |
-| `actions`      | `ToastAction[]`                                                                                | —           | Buttons rendered below the body                    |
-| `sound`        | `boolean \| 'gentle' \| 'alert' \| 'success' \| 'error' \| string`                            | `true`      | Named chime, URL, or `true` for style default      |
-| `resound`      | `boolean`                                                                                      | `false`     | Replay sound when `handle.update({ style })` changes style |
-| `max`          | `number`                                                                                       | —           | (loading) total work units for determinate donut   |
-| `value`        | `number`                                                                                       | `0`         | (loading) current progress                         |
+| Option         | Type                                                                                              | Default       | Notes                                                      |
+| -------------- | ------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------- |
+| `title`        | `string`                                                                                          | `''`          | Bold heading above the body                                |
+| `body`         | `string`                                                                                          | `''`          | Main message                                               |
+| `style`        | `'info' \| 'warning' \| 'error' \| 'loading'`                                                     | `'info'`      | Visual style and default icon                              |
+| `timeout`      | `number`                                                                                          | `4000`        | Ms before auto-dismiss; `0` disables                       |
+| `persistent`   | `boolean`                                                                                         | `false`       | Equivalent to `timeout: 0`                                 |
+| `debounce`     | `number`                                                                                          | `100`         | Ms to suppress identical follow-up toasts                  |
+| `swipe`        | `boolean`                                                                                         | `true`        | Allow swipe-to-dismiss                                     |
+| `pauseOnHover` | `boolean`                                                                                         | `true`        | Pause timer on pointer hover (desktop only)                |
+| `position`     | `'top-right' \| 'top-left' \| 'top-center' \| 'bottom-right' \| 'bottom-left' \| 'bottom-center'` | `'top-right'` | Mobile always forces `bottom-center`                       |
+| `channel`      | `string`                                                                                          | —             | Tag for grouping; rendered as a label                      |
+| `icon`         | `string \| HTMLElement \| false`                                                                  | —             | Custom icon (text, cloned DOM node, or hide)               |
+| `actions`      | `ToastAction[]`                                                                                   | —             | Buttons rendered below the body                            |
+| `sound`        | `boolean \| 'gentle' \| 'alert' \| 'success' \| 'error' \| string`                                | `true`        | Named chime, URL, or `true` for style default              |
+| `resound`      | `boolean`                                                                                         | `false`       | Replay sound when `handle.update({ style })` changes style |
+| `max`          | `number`                                                                                          | —             | (loading) total work units for determinate donut           |
+| `value`        | `number`                                                                                          | `0`           | (loading) current progress                                 |
 
 ## Accessibility
 

@@ -3,8 +3,13 @@ import { useHead } from '@/composables/useHead'
 import RotatingTagline from '@/components/RotatingTagline.vue'
 import FeatureCard from '@/components/FeatureCard.vue'
 import { chyrp, type ToastOptions } from 'chyrp'
+import { playDemoSong } from '@/utils/song'
 
 type BgStyle = 'info' | 'warning' | 'error' | 'loading'
+
+type SpotlightStage = HTMLDivElement & {
+  _spotlightTimer?: number;
+};
 
 interface BgToast {
   style: BgStyle
@@ -216,12 +221,102 @@ const featureActions = () => {
   })
 }
 
+const featureFun = () => {
+  if(window.innerWidth <= 600) {
+    chyrp({
+      style: "warning",
+      title: "Sorry about this...",
+      body: "It appears you're on mobile (or have a super tiny screen). Unfortunately, this demo really only works well on desktop. Come back later and try it!",
+    });
+
+    return;
+  }
+
+  chyrp({
+    style: "info",
+    title: "Quick check",
+    body: "Hi there, I'm the dev of Chyrp! I wanted to make sure I got your permission before playing a little tune. Don't worry, it's just a demo of chyrp's sound capabilities, but I wanted to be respectful and ask first. May I play it for you?",
+    persistent: true,
+    actions: [
+      {
+        label: 'Play demo song',
+        style: 'primary',
+        onClick: () => {
+          chyrp({
+            style: 'info',
+            title: "Thanks!",
+            body: "Get ready, here we go!",
+            timeout: 2000,
+            pauseOnHover: false,
+            swipe: false,
+          });
+
+          setTimeout(() => {
+            startSpotlightShow(8.9 * 1000);
+            playDemoSong()
+          }, 2200);
+        },
+      },
+      {
+        label: 'No thanks', onClick: () => {
+          chyrp({ style: 'info', title: "No worries!", body: "If you change your mind, the demo song is just a toast away. Thanks for checking out Chyrp!" })
+        }
+      },
+    ],
+  })
+}
+
+const startSpotlightShow = (durationMs = 5000) =>  {
+  const app = document.getElementById("app");
+
+  if (!app) {
+    throw new Error('Missing #app element');
+  }
+
+  let stage = document.querySelector(".spotlight-stage") as SpotlightStage | null;
+
+  if (!stage) {
+    stage = document.createElement("div") as SpotlightStage;
+    stage.className = "spotlight-stage";
+
+    stage.innerHTML = `
+      <div class="spotlight-beam left"></div>
+      <div class="spotlight-beam center"></div>
+      <div class="spotlight-beam right"></div>
+    `;
+
+    document.body.appendChild(stage);
+  }
+
+  app.classList.add("spotlight-active");
+
+  // force the browser to apply the initial opacity before activating transition
+  // requestAnimationFrame() isn't enough on its own here, we need a slight delay to ensure the initial styles are applied before we add the "active" class that triggers the transition
+  // Otherwise, the transition isn't "displayed". At least, it isn't on Firefox.
+  setTimeout(() => {
+    requestAnimationFrame(() => {
+      stage.classList.add("active");
+    });
+  }, 20);
+
+  window.clearTimeout(stage._spotlightTimer);
+
+  stage._spotlightTimer = window.setTimeout(() => {
+    stage.classList.remove("active");
+    app.classList.remove("spotlight-active");
+
+    window.setTimeout(() => {
+      stage.remove();
+    }, 300);
+  }, durationMs);
+}
+
 const features: {
   icon: string
   title: string
   description: string
   cta: string
-  docHref: string
+  docHref?: string
   fire: () => void
 }[] = [
     {
@@ -287,6 +382,14 @@ const features: {
       docHref: '/docs#actions',
       fire: featureActions,
     },
+    {
+      icon: '🤪',
+      title: 'Have some fun!',
+      description:
+        'Sometimes, a library can double as a way to add some fun to your site. This is one of those times.',
+      cta: 'Hit it, DJ!',
+      fire: featureFun,
+    }
   ]
 
 </script>
@@ -333,7 +436,7 @@ const features: {
       </p>
       <div class="hero-cta">
         <router-link to="/docs" class="btn btn-primary">Read the docs →</router-link>
-        <a href="https://github.com/natereprogle/chyrp" class="btn" target="_blank" rel="noopener">
+        <a href="https://github.com/natereprogle/chyrp" class="btn" target="_blank" rel="noopener" data-external-link>
           View on GitHub
         </a>
       </div>

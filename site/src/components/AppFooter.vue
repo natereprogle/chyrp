@@ -5,7 +5,7 @@
     <div class="container">
       <p>MIT licensed. Built with <code>chyrp</code> itself.</p>
       <p>
-        <a href="https://github.com/natereprogle/chyrp" target="_blank" rel="noopener">
+        <a href="https://github.com/natereprogle/chyrp" target="_blank" rel="noopener" data-external-link>
           Source code
         </a>
       </p>

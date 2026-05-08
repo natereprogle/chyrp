@@ -81,6 +81,20 @@ a:hover {
   text-decoration: underline;
 }
 
+a[data-external-link]::after {
+  content: '';
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  margin-left: 0.25em;
+  vertical-align: 0.05em;
+  background-color: currentColor;
+  opacity: 0.85;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l82.7 0-201.4 201.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3 448 192c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160c0-17.7-14.3-32-32-32L320 0zM80 96C35.8 96 0 131.8 0 176L0 432c0 44.2 35.8 80 80 80l256 0c44.2 0 80-35.8 80-80l0-80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 80c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l80 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 96z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l82.7 0-201.4 201.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3 448 192c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160c0-17.7-14.3-32-32-32L320 0zM80 96C35.8 96 0 131.8 0 176L0 432c0 44.2 35.8 80 80 80l256 0c44.2 0 80-35.8 80-80l0-80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 80c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l80 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 96z'/%3E%3C/svg%3E") center / contain no-repeat;
+  pointer-events: none;
+}
+
 .muted {
   color: var(--muted);
 }
@@ -292,4 +306,101 @@ html.dark :not(pre) > code {
 
 html.dark .btn-loading {
   color: var(--muted);
+}
+
+/** Stupid 'lil demo fun */
+#app {
+  min-height: 100vh;
+  position: relative;
+  transition: filter 300ms ease, opacity 300ms ease;
+}
+
+.spotlight-stage {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999998; /** Toast container is already 999999 */
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.spotlight-stage.active {
+  opacity: 1;
+}
+
+/* This dims EVERYTHING visually, including transparent elements */
+.spotlight-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(0, 0, 0, 0.68);
+}
+
+/* Beams sit above the dim layer */
+.spotlight-beam {
+  position: absolute;
+  z-index: 1;
+  bottom: -12vh;
+  left: 50%;
+  width: 26vw;
+  height: 120vh;
+  transform-origin: 50% 100%;
+
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 220, 0.38),
+    rgba(255, 255, 220, 0.14) 35%,
+    rgba(255, 255, 220, 0.03) 70%,
+    transparent
+  );
+
+  clip-path: polygon(42% 100%, 58% 100%, 100% 0%, 0% 0%);
+  filter: blur(10px);
+  opacity: 0.75;
+
+  /* important */
+  mix-blend-mode: normal;
+}
+
+.spotlight-beam.left {
+  animation: sweep-left 2.6s ease-in-out infinite alternate;
+}
+
+.spotlight-beam.right {
+  animation: sweep-right 2.9s ease-in-out infinite alternate;
+}
+
+.spotlight-beam.center {
+  width: 20vw;
+  animation: sweep-center 3.4s ease-in-out infinite alternate;
+  opacity: 0.65;
+}
+
+@keyframes sweep-left {
+  from {
+    transform: translateX(-55%) rotate(-32deg);
+  }
+  to {
+    transform: translateX(-55%) rotate(22deg);
+  }
+}
+
+@keyframes sweep-right {
+  from {
+    transform: translateX(-45%) rotate(34deg);
+  }
+  to {
+    transform: translateX(-45%) rotate(-20deg);
+  }
+}
+
+@keyframes sweep-center {
+  from {
+    transform: translateX(-50%) rotate(-14deg);
+  }
+  to {
+    transform: translateX(-50%) rotate(14deg);
+  }
 }

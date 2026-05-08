@@ -1,9 +1,10 @@
 import { EXIT_ANIMATION_MS, SWIPE_DISTANCE_THRESHOLD, SWIPE_VELOCITY_THRESHOLD } from './constants';
 import type { ToastHandleImpl } from './handle';
+import { isMobile } from './utils';
 
 interface SwipeAxis {
   axis: 'x' | 'y';
-  dir: 1 | -1;
+  dir: 1 | 0 | -1; // 0 is either way, only applied on mobile
 }
 
 /**
@@ -23,13 +24,14 @@ export function attachSwipe(handle: ToastHandleImpl): void {
   let dragging = false;
   let pointerId: number | null = null;
 
-  // Resolve swipe axis and direction from the toast's position. The toast
-  // exits toward the screen edge it's anchored to, with rubber-banding in the
-  // opposite direction.
+  // Resolve swipe axis and direction from the toast's position. On mobile,
+  // center toasts swipe horizontally in either direction. Otherwise, the toast
+  // exits toward its anchored screen edge with one-way rubber-banding.
   function resolveAxis(): SwipeAxis {
     const pos = handle.position;
     if (pos.includes('center')) {
-      return { axis: 'y', dir: pos.startsWith('top-') ? -1 : 1 };
+      if (isMobile()) return { axis: 'x', dir: 0 };
+      else return { axis: 'y', dir: pos.startsWith('top-') ? -1 : 1 };
     }
     if (pos.includes('left')) return { axis: 'x', dir: -1 };
     return { axis: 'x', dir: 1 };
@@ -58,10 +60,11 @@ export function attachSwipe(handle: ToastHandleImpl): void {
     dy = e.clientY - startY;
     const ad = resolveAxis();
     const raw = ad.axis === 'y' ? dy : dx;
-    // 'travel' is positive in the dismissal direction.
-    let travel = raw * ad.dir;
-    if (travel < 0) travel = travel * 0.2; // rubber-band
-    const visualTravel = travel * ad.dir;
+    // In one-way mode, travel is positive in the dismissal direction.
+    // In two-way mode (dir === 0), keep raw movement and disable rubber-band.
+    let travel = ad.dir === 0 ? Math.abs(raw) : raw * ad.dir;
+    if (ad.dir !== 0 && travel < 0) travel = travel * 0.2; // rubber-band
+    const visualTravel = ad.dir === 0 ? raw : travel * ad.dir;
     const opacity = 1 - Math.min(0.7, Math.abs(travel) / 200);
     el.style.transform =
       ad.axis === 'y' ? `translateY(${visualTravel}px)` : `translateX(${visualTravel}px)`;
@@ -81,7 +84,7 @@ export function attachSwipe(handle: ToastHandleImpl): void {
     }
     const ad = resolveAxis();
     const raw = ad.axis === 'y' ? dy : dx;
-    const travel = raw * ad.dir;
+    const travel = ad.dir === 0 ? Math.abs(raw) : raw * ad.dir;
     const elapsed = Math.max(1, Date.now() - startT);
     const velocity = travel / elapsed;
     const pastDistance = travel >= SWIPE_DISTANCE_THRESHOLD;
@@ -89,7 +92,7 @@ export function attachSwipe(handle: ToastHandleImpl): void {
 
     if (pastDistance || pastVelocity) {
       el.style.transition = `transform ${EXIT_ANIMATION_MS}ms ease-out, opacity ${EXIT_ANIMATION_MS}ms ease-out`;
-      const sign = ad.dir > 0 ? '120%' : '-120%';
+      const sign = ad.dir === 0 ? (raw >= 0 ? '120%' : '-120%') : ad.dir > 0 ? '120%' : '-120%';
       el.style.transform = ad.axis === 'y' ? `translateY(${sign})` : `translateX(${sign})`;
       el.style.opacity = '0';
       handle.finalizeAfterSwipe();

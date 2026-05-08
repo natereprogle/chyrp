@@ -1,6 +1,6 @@
 {
   "name": "chyrp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Toasts that get your attention. Dependency-free toast notification library with stacking, swipe-to-dismiss, sounds, and promise integration.",
   "type": "module",
   "author": "Nate Reprogle",
@@ -34,7 +34,7 @@
     "build": "tsdown",
     "build:minify": "tsdown --minify",
     "build:dev": "tsdown --watch",
-    "demo": "concurrently -k -n build,serve \"npm:build:dev\" \"serve -l 3000\"",
+    "demo": "concurrently -k -n build,serve \"npm:build:dev\" \"cd site/ && npm run dev -- --host 0.0.0.0\"",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
