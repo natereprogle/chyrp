@@ -42,6 +42,7 @@ const tocItems = [
   { id: 'mobile', label: 'Mobile' },
   { id: 'reduced-motion', label: 'Reduced motion' },
   { id: 'dark-mode', label: 'Dark mode' },
+  { id: 'css-variables', label: 'CSS variables' },
   { id: 'api', label: 'API reference' },
 ] as const
 
@@ -255,8 +256,7 @@ const applyConfigure = () => {
   configure({
     position: cfgPosition.value,
     pauseOnHover: cfgPause.value === 'true',
-    sound:
-      cfgSound.value === 'true' ? true : cfgSound.value === 'false' ? false : cfgSound.value,
+    sound: cfgSound.value === 'true' ? true : cfgSound.value === 'false' ? false : cfgSound.value,
     resound: cfgResound.value === 'true',
   })
   chyrp.info('Defaults applied')
@@ -317,15 +317,17 @@ onMounted(() => {
         <NoteCallout>
           <strong>CDN:</strong> Drop in the IIFE bundle and access the library at
           <code>window.Chyrp</code>:
-          <CodeBlock mini
-            :code="`<link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/chyrp/dist/style.css&quot; />\n<script src=&quot;https://unpkg.com/chyrp/dist/index.iife.js&quot;></script>\n<script>Chyrp.chyrp.info('Hello');</script>`" />
+          <CodeBlock
+            mini
+            :code="`<link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/chyrp/dist/style.css&quot; />\n<script src=&quot;https://unpkg.com/chyrp/dist/index.iife.js&quot;></script>\n<script>Chyrp.chyrp.info('Hello');</script>`"
+          />
         </NoteCallout>
       </DocSection>
 
       <DocSection id="quick-start" heading="Quick start">
         <p>
-          Show a toast with a single call. Every form returns a <code>ToastHandle</code> you can
-          use to dismiss or update later.
+          Show a toast with a single call. Every form returns a <code>ToastHandle</code> you can use
+          to dismiss or update later.
         </p>
         <DemoArea label="Quick start example">
           <button type="button" class="btn" @click="showBasic">Show toast</button>
@@ -349,7 +351,8 @@ onMounted(() => {
           </button>
         </DemoArea>
         <CodeBlock
-          :code="`chyrp.info('Saved');\nchyrp.warning('Almost out of space');\nchyrp.error('Upload failed');\nchyrp.loading('Working…');\n\n// equivalent:\nchyrp({ body: 'Saved', style: 'info' });`" />
+          :code="`chyrp.info('Saved');\nchyrp.warning('Almost out of space');\nchyrp.error('Upload failed');\nchyrp.loading('Working…');\n\n// equivalent:\nchyrp({ body: 'Saved', style: 'info' });`"
+        />
       </DocSection>
 
       <DocSection id="title-body" heading="Title & body">
@@ -359,16 +362,23 @@ onMounted(() => {
             Show titled toast
           </button>
         </DemoArea>
-        <CodeBlock :code="`chyrp({\n  title: 'Saved',\n  body: 'Your changes are live.',\n  style: 'info',\n});`" />
+        <CodeBlock
+          :code="`chyrp({\n  title: 'Saved',\n  body: 'Your changes are live.',\n  style: 'info',\n});`"
+        />
       </DocSection>
 
       <DocSection id="position" heading="Position">
         <p>
-          Six anchor positions. Mobile viewports always force <code>bottom-center</code> for
-          thumb reach.
+          Six anchor positions. Mobile viewports always force <code>bottom-center</code> for thumb
+          reach.
         </p>
         <DemoArea stack label="Position picker">
-          <RadioPills v-model="positionValue" name="position" :options="positionOptions" label="Toast position" />
+          <RadioPills
+            v-model="positionValue"
+            name="position"
+            :options="positionOptions"
+            label="Toast position"
+          />
           <div>
             <button type="button" class="btn btn-primary" @click="showAtPosition">
               Show at selected position
@@ -391,21 +401,21 @@ onMounted(() => {
           <button type="button" class="btn" @click="showTiming(null)">persistent</button>
         </DemoArea>
         <CodeBlock
-          :code="`chyrp.info('Quick',     { timeout: 1500 });\nchyrp.info('Default');                          // 4000 ms\nchyrp.info('Patient',   { timeout: 8000 });\nchyrp.info('Forever',   { persistent: true }); // user must dismiss`" />
+          :code="`chyrp.info('Quick',     { timeout: 1500 });\nchyrp.info('Default');                          // 4000 ms\nchyrp.info('Patient',   { timeout: 8000 });\nchyrp.info('Forever',   { persistent: true }); // user must dismiss`"
+        />
       </DocSection>
 
       <DocSection id="debounce" heading="Debounce">
         <p>
-          Identical toasts fired within the debounce window are suppressed and the existing
-          handle is returned. Useful for chatty event sources. Click the button rapidly:
+          Identical toasts fired within the debounce window are suppressed and the existing handle
+          is returned. Useful for chatty event sources. Click the button rapidly:
         </p>
         <DemoArea label="Debounce demo">
-          <button type="button" class="btn btn-primary" @click="showDebounce">
-            Spam click me
-          </button>
+          <button type="button" class="btn btn-primary" @click="showDebounce">Spam click me</button>
         </DemoArea>
         <CodeBlock
-          :code="`// Default debounce window is 100 ms; bump it for noisier sources:\nchyrp.info('Same message', { debounce: 2000 });`" />
+          :code="`// Default debounce window is 100 ms; bump it for noisier sources:\nchyrp.info('Same message', { debounce: 2000 });`"
+        />
       </DocSection>
 
       <DocSection id="channels" heading="Channels">
@@ -424,13 +434,15 @@ onMounted(() => {
           </button>
         </DemoArea>
         <CodeBlock
-          :code="`import { chyrp, dismissChannel } from 'chyrp';\n\nchyrp.info('Connection lost', { channel: 'network', persistent: true });\nchyrp.info('Retrying…',       { channel: 'network' });\n\n// later:\ndismissChannel('network');`" />
+          :code="`import { chyrp, dismissChannel } from 'chyrp';\n\nchyrp.info('Connection lost', { channel: 'network', persistent: true });\nchyrp.info('Retrying…',       { channel: 'network' });\n\n// later:\ndismissChannel('network');`"
+        />
       </DocSection>
 
       <DocSection id="icons" heading="Custom icons">
         <p>
-          Override the default icon with a string (text or emoji), an <code>HTMLElement</code>
-          (cloned per toast), or <code>false</code> to hide the icon column entirely.
+          Override the default icon with a string (text or emoji), an
+          <code>HTMLElement</code> (cloned per toast), or <code>false</code> to hide the icon column
+          entirely.
         </p>
         <DemoArea label="Icon variants">
           <button type="button" class="btn" @click="iconEmoji">Emoji icon</button>
@@ -438,7 +450,8 @@ onMounted(() => {
           <button type="button" class="btn" @click="iconNone">No icon</button>
         </DemoArea>
         <CodeBlock
-          :code="`chyrp.info('Party time',  { icon: '🎉' });\n\nconst svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');\n// …populate svg…\nchyrp.info('Custom DOM',  { icon: svg });\n\nchyrp.info('No icon box', { icon: false });`" />
+          :code="`chyrp.info('Party time',  { icon: '🎉' });\n\nconst svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');\n// …populate svg…\nchyrp.info('Custom DOM',  { icon: svg });\n\nchyrp.info('No icon box', { icon: false });`"
+        />
       </DocSection>
 
       <DocSection id="actions" heading="Action buttons">
@@ -453,14 +466,14 @@ onMounted(() => {
           <button type="button" class="btn" @click="actionMulti">Multi-action</button>
         </DemoArea>
         <CodeBlock
-          :code="`chyrp({\n  title: 'File deleted',\n  body: 'document.pdf was moved to trash',\n  persistent: true,\n  actions: [\n    { label: 'Undo', style: 'primary', onClick: () => restore() },\n    { label: 'Dismiss' },\n  ],\n});`" />
+          :code="`chyrp({\n  title: 'File deleted',\n  body: 'document.pdf was moved to trash',\n  persistent: true,\n  actions: [\n    { label: 'Undo', style: 'primary', onClick: () => restore() },\n    { label: 'Dismiss' },\n  ],\n});`"
+        />
       </DocSection>
 
       <DocSection id="promise" heading="Promise integration">
         <p>
-          Wrap a promise to show a loading toast that converts to success or error when it
-          settles. Each branch may be a string, an options object, or a function returning
-          either.
+          Wrap a promise to show a loading toast that converts to success or error when it settles.
+          Each branch may be a string, an options object, or a function returning either.
         </p>
         <DemoArea label="Promise demos">
           <button type="button" class="btn btn-primary" @click="promiseResolve">
@@ -471,7 +484,8 @@ onMounted(() => {
           </button>
         </DemoArea>
         <CodeBlock
-          :code="`chyrp.promise(api.saveUser(user), {\n  loading: 'Saving…',\n  success: (user) => \`Saved \${user.name}\`,\n  error:   (err)  => ({ title: 'Save failed', body: err.message }),\n});`" />
+          :code="`chyrp.promise(api.saveUser(user), {\n  loading: 'Saving…',\n  success: (user) => \`Saved \${user.name}\`,\n  error:   (err)  => ({ title: 'Save failed', body: err.message }),\n});`"
+        />
       </DocSection>
 
       <DocSection id="progress" heading="Determinate progress">
@@ -486,15 +500,16 @@ onMounted(() => {
           </button>
         </DemoArea>
         <CodeBlock
-          :code="`const handle = chyrp.loading('Uploading', { max: 100, value: 0 });\n\nuploader.on('progress', (n) => handle.update({ value: n }));\nuploader.on('done',     ()  => handle.update({\n  style: 'info', body: 'Upload complete', timeout: 2000,\n}));`" />
+          :code="`const handle = chyrp.loading('Uploading', { max: 100, value: 0 });\n\nuploader.on('progress', (n) => handle.update({ value: n }));\nuploader.on('done',     ()  => handle.update({\n  style: 'info', body: 'Upload complete', timeout: 2000,\n}));`"
+        />
       </DocSection>
 
       <DocSection id="update" heading="Updating in place">
         <p>
-          <code>handle.update(opts)</code> mutates a live toast — change body, style, icon,
-          actions, timeout, anything. Useful for streaming status updates without flapping the
-          UI. By default style changes are silent; enable <code>resound</code> to replay sound
-          on style transitions.
+          <code>handle.update(opts)</code> mutates a live toast — change body, style, icon, actions,
+          timeout, anything. Useful for streaming status updates without flapping the UI. By default
+          style changes are silent; enable <code>resound</code> to replay sound on style
+          transitions.
         </p>
         <DemoArea label="Streaming updates">
           <button type="button" class="btn btn-primary" @click="streamUpdates">
@@ -502,14 +517,15 @@ onMounted(() => {
           </button>
         </DemoArea>
         <CodeBlock
-          :code="`const h = chyrp.loading('Step 1/3: connecting', { resound: true });\nsetTimeout(() => h.update({ body: 'Step 2/3: uploading' }), 700);\nsetTimeout(() => h.update({ body: 'Step 3/3: verifying' }), 1400);\nsetTimeout(() => h.update({ style: 'info', body: 'Done!', timeout: 2000 }), 2100);`" />
+          :code="`const h = chyrp.loading('Step 1/3: connecting', { resound: true });\nsetTimeout(() => h.update({ body: 'Step 2/3: uploading' }), 700);\nsetTimeout(() => h.update({ body: 'Step 3/3: verifying' }), 1400);\nsetTimeout(() => h.update({ style: 'info', body: 'Done!', timeout: 2000 }), 2100);`"
+        />
       </DocSection>
 
       <DocSection id="sound" heading="Sound">
         <p>
-          Chyrp toasts demand attention. Pass a named chime, a custom URL, or <code>true</code>
-          for a style-aware default. Named chimes are synthesized via Web Audio — no asset
-          dependency. Sound is <strong>opt-out</strong>; the global default is style-aware.
+          Chyrp toasts demand attention. Pass a named chime, a custom URL, or <code>true</code> for
+          a style-aware default. Named chimes are synthesized via Web Audio — no asset dependency.
+          Sound is <strong>opt-out</strong>; the global default is style-aware.
         </p>
         <DemoArea label="Sound presets">
           <button type="button" class="btn" @click="soundGentle">gentle</button>
@@ -519,7 +535,8 @@ onMounted(() => {
           <button type="button" class="btn" @click="soundDefault">true (style default)</button>
         </DemoArea>
         <CodeBlock
-          :code="`chyrp.info('Saved',  { sound: 'success' });    // named chime\nchyrp.error('Save failed', { sound: true });   // style default → 'error'\nchyrp.info('Custom', { sound: '/ding.mp3' });  // your own audio asset`" />
+          :code="`chyrp.info('Saved',  { sound: 'success' });    // named chime\nchyrp.error('Save failed', { sound: true });   // style default → 'error'\nchyrp.info('Custom', { sound: '/ding.mp3' });  // your own audio asset`"
+        />
 
         <h3>Replay sound on update()</h3>
         <p>
@@ -527,24 +544,27 @@ onMounted(() => {
           <code>handle.update({ style })</code> changes style.
         </p>
         <CodeBlock
-          :code="`const h = chyrp.loading('Uploading', {\n  sound: true,\n  resound: true,\n});\n\nh.update({ style: 'info', body: 'Upload complete' }); // plays success preset`" />
+          :code="`const h = chyrp.loading('Uploading', {\n  sound: true,\n  resound: true,\n});\n\nh.update({ style: 'info', body: 'Upload complete' }); // plays success preset`"
+        />
 
         <h3>Custom chime notes</h3>
         <p>
-          Pass a <code>ChimeNote[]</code> array directly to play a fully custom synthesized chime
-          on a single toast:
+          Pass a <code>ChimeNote[]</code> array directly to play a fully custom synthesized chime on
+          a single toast:
         </p>
         <DemoArea label="Custom chime">
           <button type="button" class="btn btn-primary" @click="soundCustom">Custom chime</button>
         </DemoArea>
         <CodeBlock
-          :code="`chyrp.info('Custom sound!', {\n  sound: [\n    { frequency: 880,   startOffset: 0,    duration: 0.1, amplitude: 0.2 },\n    { frequency: 1108,  startOffset: 0.08, duration: 0.15, amplitude: 0.18 },\n    { frequency: 1318,  startOffset: 0.16, duration: 0.2, amplitude: 0.15 },\n  ],\n});`" />
+          :code="`chyrp.info('Custom sound!', {\n  sound: [\n    { frequency: 880,   startOffset: 0,    duration: 0.1, amplitude: 0.2 },\n    { frequency: 1108,  startOffset: 0.08, duration: 0.15, amplitude: 0.18 },\n    { frequency: 1318,  startOffset: 0.16, duration: 0.2, amplitude: 0.15 },\n  ],\n});`"
+        />
 
         <p>
-          <code>ChimeNote</code> objects also accept an optional <code>oscillatorType</code> property to specify the
-          waveform type. This property accepts
-          all standard Web Audio oscillator types: <code>sine</code>, <code>square</code>, <code>sawtooth</code>, and
-          <code>triangle</code>. If omitted, the default waveform is <code>sine</code>.
+          <code>ChimeNote</code> objects also accept an optional
+          <code>oscillatorType</code> property to specify the waveform type. This property accepts
+          all standard Web Audio oscillator types: <code>sine</code>, <code>square</code>,
+          <code>sawtooth</code>, and <code>triangle</code>. If omitted, the default waveform is
+          <code>sine</code>.
         </p>
         <NoteCallout>
           At the current moment, the <code>custom</code> oscillator type is not supported.
@@ -552,28 +572,29 @@ onMounted(() => {
 
         <h3>Overriding preset sounds</h3>
         <p>
-          Use <code>configure({ soundPresets })</code> to globally replace any of the four
-          built-in chime presets (<code>success</code>, <code>error</code>, <code>alert</code>,
+          Use <code>configure({ soundPresets })</code> to globally replace any of the four built-in
+          chime presets (<code>success</code>, <code>error</code>, <code>alert</code>,
           <code>gentle</code>). Omitted presets keep their defaults.
         </p>
         <CodeBlock
-          :code="`import { configure } from 'chyrp';\n\nconfigure({\n  soundPresets: {\n    success: [\n      { frequency: 880, startOffset: 0, duration: 0.12, amplitude: 0.2 },\n      { frequency: 1320, startOffset: 0.1, duration: 0.18, amplitude: 0.18 },\n    ],\n    // error, alert, gentle keep their defaults\n  },\n});`" />
+          :code="`import { configure } from 'chyrp';\n\nconfigure({\n  soundPresets: {\n    success: [\n      { frequency: 880, startOffset: 0, duration: 0.12, amplitude: 0.2 },\n      { frequency: 1320, startOffset: 0.1, duration: 0.18, amplitude: 0.18 },\n    ],\n    // error, alert, gentle keep their defaults\n  },\n});`"
+        />
 
         <h3>Opt-out of sound</h3>
         <p>
-          Sound isn't for everyone. Use <code>configure({ sound: false })</code> to globally
-          disable all sounds. Use <code>resound: false</code> (default) to keep
+          Sound isn't for everyone. Use <code>configure({ sound: false })</code> to globally disable
+          all sounds. Use <code>resound: false</code> (default) to keep
           <code>update({ style })</code> transitions silent.
         </p>
         <CodeBlock
-          :code="`import { configure } from 'chyrp';\n\nconfigure({\n  sound: false,\n  resound: false,\n});`" />
+          :code="`import { configure } from 'chyrp';\n\nconfigure({\n  sound: false,\n  resound: false,\n});`"
+        />
       </DocSection>
 
       <DocSection id="pause" heading="Pause-on-hover">
         <p>
-          The auto-dismiss timer pauses while the toast is hovered or keyboard-focused. The
-          progress bar freezes and resumes from where it left off. Auto-disabled on touch-primary
-          devices.
+          The auto-dismiss timer pauses while the toast is hovered or keyboard-focused. The progress
+          bar freezes and resumes from where it left off. Auto-disabled on touch-primary devices.
         </p>
         <DemoArea stack label="Pause-on-hover demo">
           <div>
@@ -584,7 +605,8 @@ onMounted(() => {
           </div>
         </DemoArea>
         <CodeBlock
-          :code="`chyrp.info('Read me carefully',  { pauseOnHover: true,  timeout: 5000 });\nchyrp.info('Slipping away…',     { pauseOnHover: false, timeout: 5000 });`" />
+          :code="`chyrp.info('Read me carefully',  { pauseOnHover: true,  timeout: 5000 });\nchyrp.info('Slipping away…',     { pauseOnHover: false, timeout: 5000 });`"
+        />
       </DocSection>
 
       <DocSection id="swipe" heading="Swipe-to-dismiss">
@@ -593,20 +615,25 @@ onMounted(() => {
           dismiss it with momentum. Disable with <code>swipe: false</code>.
         </p>
         <NoteCallout>
-          Since toasts require being swiped in the direction of their anchor point to dismiss, on mobile this
-          would normally require users to swipe downwards. However, on certain devices this can cause pages
-          to scroll behind the toast, as well. On iOS devices, this also can trigger the <a
+          Since toasts require being swiped in the direction of their anchor point to dismiss, on
+          mobile this would normally require users to swipe downwards. However, on certain devices
+          this can cause pages to scroll behind the toast, as well. On iOS devices, this also can
+          trigger the
+          <a
             href="https://support.apple.com/guide/iphone/use-reachability-iph145eba8e9/ios"
-            data-external-link>Reachability</a> feature if enabled.
-          To fix this, toasts on mobile allow swiping a toast left <em>or</em> right, regardless of them being
-          bottom-center anchored.
+            data-external-link
+            >Reachability</a
+          >
+          feature if enabled. To fix this, toasts on mobile allow swiping a toast left
+          <em>or</em> right, regardless of them being bottom-center anchored.
         </NoteCallout>
         <DemoArea label="Swipe demo">
           <button type="button" class="btn btn-primary" @click="swipeOn">Swipe me away</button>
           <button type="button" class="btn" @click="swipeOff">No-swipe toast</button>
         </DemoArea>
         <CodeBlock
-          :code="`chyrp.info('Drag me out',     { persistent: true });\nchyrp.info('Pinned in place', { swipe: false, persistent: true });`" />
+          :code="`chyrp.info('Drag me out',     { persistent: true });\nchyrp.info('Pinned in place', { swipe: false, persistent: true });`"
+        />
       </DocSection>
 
       <DocSection id="dismiss" heading="Dismiss helpers">
@@ -616,7 +643,8 @@ onMounted(() => {
           <button type="button" class="btn btn-error" @click="dismissAll">dismissAll()</button>
         </DemoArea>
         <CodeBlock
-          :code="`import { dismissAll, dismissChannel } from 'chyrp';\n\ndismissAll();\ndismissChannel('network');`" />
+          :code="`import { dismissAll, dismissChannel } from 'chyrp';\n\ndismissAll();\ndismissChannel('network');`"
+        />
       </DocSection>
 
       <DocSection id="configure" heading="Global configuration">
@@ -667,37 +695,44 @@ onMounted(() => {
           </div>
         </DemoArea>
         <CodeBlock
-          :code="`configure({\n  position: '${cfgPosition}',\n  pauseOnHover: ${cfgPause},\n  sound: ${(cfgSound === 'true' ? true : cfgSound === 'false' ? false : `'${cfgSound}'`)},\n  resound: ${cfgResound},\n});`" />
+          :code="`configure({\n  position: '${cfgPosition}',\n  pauseOnHover: ${cfgPause},\n  sound: ${cfgSound === 'true' ? true : cfgSound === 'false' ? false : `'${cfgSound}'`},\n  resound: ${cfgResound},\n});`"
+        />
       </DocSection>
 
       <DocSection id="alert" heading="alert() override">
         <p>
-          Opt-in helper that replaces <code>window.alert</code> with a toast-based version.
-          Returns a function that restores the native alert.
+          Opt-in helper that replaces <code>window.alert</code> with a toast-based version. Returns
+          a function that restores the native alert.
         </p>
         <DemoArea label="alert override demo">
-          <button type="button" class="btn btn-primary" :aria-pressed="alertOn" @click="toggleAlert">
+          <button
+            type="button"
+            class="btn btn-primary"
+            :aria-pressed="alertOn"
+            @click="toggleAlert"
+          >
             Intercept: <span>{{ alertOn ? 'on' : 'off' }}</span>
           </button>
           <button type="button" class="btn" @click="triggerAlert">Call alert('hello')</button>
         </DemoArea>
         <CodeBlock
-          :code="`import { interceptAlert } from 'chyrp';\n\nconst restore = interceptAlert();\nwindow.alert('hello'); // shows as an info toast\n\nrestore(); // put the native alert back`" />
+          :code="`import { interceptAlert } from 'chyrp';\n\nconst restore = interceptAlert();\nwindow.alert('hello'); // shows as an info toast\n\nrestore(); // put the native alert back`"
+        />
       </DocSection>
 
       <DocSection id="a11y" heading="Accessibility">
         <p>
-          Toasts are <code>role="button"</code> with <code>tabindex="0"</code>, so they appear
-          in the tab order. Keyboard focus pauses the auto-dismiss timer (just like hover) —
-          handy for screen-reader users who need extra time. Action buttons inside toasts are
-          real <code>&lt;button&gt;</code>s.
+          Toasts are <code>role="button"</code> with <code>tabindex="0"</code>, so they appear in
+          the tab order. Keyboard focus pauses the auto-dismiss timer (just like hover) — handy for
+          screen-reader users who need extra time. Action buttons inside toasts are real
+          <code>&lt;button&gt;</code>s.
         </p>
         <ul class="kbd-list">
           <li><kbd>Tab</kbd> — focus a live toast</li>
           <li><kbd>Enter</kbd> / <kbd>Space</kbd> — dismiss the focused toast</li>
           <li>
-            <kbd>Tab</kbd> into the overflow pill, then <kbd>Enter</kbd> — dismiss the oldest
-            hidden toast
+            <kbd>Tab</kbd> into the overflow pill, then <kbd>Enter</kbd> — dismiss the oldest hidden
+            toast
           </li>
         </ul>
         <DemoArea label="Accessibility demo">
@@ -710,40 +745,42 @@ onMounted(() => {
       <DocSection id="mobile" heading="Mobile">
         <p>
           Below 600&nbsp;px viewport width, toasts automatically reposition to the bottom edge
-          regardless of <code>position</code>, expand to full width with safe-area inset
-          padding, and use larger touch targets and progress bar. Pause-on-hover is disabled on
-          touch-primary devices since hover doesn't apply.
+          regardless of <code>position</code>, expand to full width with safe-area inset padding,
+          and use larger touch targets and progress bar. Pause-on-hover is disabled on touch-primary
+          devices since hover doesn't apply.
         </p>
         <NoteCallout>
-          Resize this page to under 600&nbsp;px wide to see the mobile layout, or use your
-          browser's device toolbar.
+          Resize this page to under 600&nbsp;px wide to see the mobile layout, or use your browser's
+          device toolbar.
         </NoteCallout>
       </DocSection>
 
       <DocSection id="reduced-motion" heading="Reduced motion">
         <p>
-          When <code>prefers-reduced-motion: reduce</code> is set, all transform-based
-          entry/exit animations collapse to a fade, the spinner slows down, and the overflow
-          pill skips its slide-in. Toasts still appear and dismiss — they just don't fly.
+          When <code>prefers-reduced-motion: reduce</code> is set, all transform-based entry/exit
+          animations collapse to a fade, the spinner slows down, and the overflow pill skips its
+          slide-in. Toasts still appear and dismiss — they just don't fly.
         </p>
         <NoteCallout>
-          Toggle <em>Reduce motion</em> in your OS settings (or DevTools → Rendering → Emulate
-          CSS media feature) to verify.
+          Toggle <em>Reduce motion</em> in your OS settings (or DevTools → Rendering → Emulate CSS
+          media feature) to verify.
         </NoteCallout>
       </DocSection>
 
       <DocSection id="dark-mode" heading="Dark mode">
         <p>
           Toasts automatically adapt to dark backgrounds via
-          <code>prefers-color-scheme: dark</code>. All colors are defined as CSS custom
-          properties prefixed with <code>--tt-</code>, so you can override any of them.
+          <code>prefers-color-scheme: dark</code>. All colors are defined as CSS custom properties
+          prefixed with <code>--tt-</code>, so you can override any of them.
         </p>
         <p>
           To force a specific theme regardless of system preference, add a <code>light</code> or
           <code>dark</code> class to the <code>&lt;html&gt;</code> element:
         </p>
+        <!--suppress HtmlRequiredLangAttribute -->
         <CodeBlock
-          :code="`<!-- Force dark mode -->\n<html class=&quot;dark&quot;>\n\n<!-- Force light mode -->\n<html class=&quot;light&quot;>\n\n<!-- Follow system preference (default) -->\n<html>`" />
+          :code="`<!-- Force dark mode -->\n<html class=&quot;dark&quot;>\n\n<!-- Force light mode -->\n<html class=&quot;light&quot;>\n\n<!-- Follow system preference (default) -->\n<html>`"
+        />
         <NoteCallout>
           Use the toggle in the top-right corner of this page to preview each mode. The
           <code>.dark</code> class applies dark variables unconditionally, while
@@ -753,128 +790,290 @@ onMounted(() => {
         <h3>Customizing colors</h3>
         <p>Override any <code>--tt-*</code> variable to theme the toasts. For example:</p>
         <CodeBlock
-          :code="`:root {\n  --tt-bg: #1a1a2e;\n  --tt-title-color: #eee;\n  --tt-body-color: #ccc;\n  --tt-info: #00d2ff;\n}`" />
+          :code="`:root {\n  --tt-bg: #1a1a2e;\n  --tt-title-color: #eee;\n  --tt-body-color: #ccc;\n  --tt-info: #00d2ff;\n}`"
+        />
+      </DocSection>
+
+      <DocSection id="css-variables" heading="CSS variables">
+        <p>This section details all of the CSS variables that Chyrp uses to theme toasts.</p>
+
+        <NoteCallout>
+          Chyrp handles dark mode by using a media selector of
+          <code>@media (prefers-color-scheme: dark) { html:not(.light) { /* variables */ }}</code>.
+          This is done so that a class of <code>.light</code> on the
+          <code>&lt;html&gt;</code> element can be used to prevent the
+          <code>prefers-color-scheme</code> media query from activating. Another CSS rule,
+          <code>html.dark { /* variables */ }</code>, exists so that an explicit
+          <code>.dark</code> class can be used to force dark mode.<br /><br />
+
+          If you plan on overriding these variables, you may wish to define your own methods for
+          handling light/dark mode.
+        </NoteCallout>
+
+        <h3>Surface Variables</h3>
+        <ApiTable
+          caption="Surface Variables"
+          :headers="['Variable', 'Default', 'Dark Mode']"
+          :rows="[
+            ['<code>--tt-bg</code>', '<code>#1a1a2e</code>', '<code>#1f2937</code>'],
+            [
+              '<code>--tt-shadow</code>',
+              '<code>0 4px 12px rgba(0, 0, 0, 0.15)</code>',
+              '<code>0 4px 12px rgba(0, 0, 0, 0.4)</code>',
+            ],
+            [
+              '<code>--tt-shadow-hover</code>',
+              '<code>0 6px 16px rgba(0, 0, 0, 0.18)</code>',
+              '<code>0 6px 16px rgba(0, 0, 0, 0.5)</code>',
+            ],
+          ]"
+        />
+
+        <h3>Text Variables</h3>
+        <ApiTable
+          caption="Text Variables"
+          :headers="['Variable', 'Default', 'Dark Mode']"
+          :rows="[
+            ['<code>--tt-title-color</code>', '<code>#111827</code>', '<code>#f9fafb</code>'],
+            ['<code>--tt-body-color</code>', '<code>#4b5563</code>', '<code>#d1d5db</code>'],
+            ['<code>--tt-channel-color</code>', '<code>#9ca3af</code>', '<code>#6b7280</code>'],
+          ]"
+        />
+
+        <h3>Accent Variables</h3>
+        <ApiTable
+          caption="Accent Variables"
+          :headers="['Variable', 'Default', 'Dark Mode']"
+          :rows="[
+            ['<code>--tt-info</code>', '<code>#3b82f6</code>', '—'],
+            ['<code>--tt-warning</code>', '<code>#f59e0b</code>', '—'],
+            ['<code>--tt-error</code>', '<code>#ef4444</code>', '—'],
+            ['<code>--tt-loading</code>', '<code>#6b7280</code>', '—'],
+            ['<code>--tt-focus-ring</code>', '<code>rgba(59, 130, 246, 0.5)</code>', '—'],
+          ]"
+        />
+
+        <h3>Action Button Variables</h3>
+        <ApiTable
+          caption="Action Button Variables"
+          :headers="['Variable', 'Default', 'Dark Mode']"
+          :rows="[
+            ['<code>--tt-action-bg</code>', '<code>#f3f4f6</code>', '<code>#374151</code>'],
+            ['<code>--tt-action-color</code>', '<code>#374151</code>', '<code>#d1d5db</code>'],
+            ['<code>--tt-action-hover-bg</code>', '<code>#e5e7eb</code>', '<code>#4b5563</code>'],
+            ['<code>--tt-action-primary-bg</code>', '<code>#3b82f6</code>', '—'],
+            ['<code>--tt-action-primary-hover-bg</code>', '<code>#2563eb</code>', '—'],
+          ]"
+        />
+
+        <h3>Spinner Variables</h3>
+        <ApiTable
+          caption="Spinner Variables"
+          :headers="['Variable', 'Default', 'Dark Mode']"
+          :rows="[
+            ['<code>--tt-spinner-track</code>', '<code>#e5e7eb</code>', '<code>#374151</code>'],
+            ['<code>--tt-spinner-fill</code>', '<code>#6b7280</code>', '<code>#9ca3af</code>'],
+          ]"
+        />
+
+        <h3>Progress & Donut Variables</h3>
+        <ApiTable
+          caption="Progress & Donut Variables"
+          :headers="['Variable', 'Default', 'Dark Mode']"
+          :rows="[
+            [
+              '<code>--tt-progress-bg</code>',
+              '<code>rgba(0, 0, 0, 0.06)</code>',
+              '<code>rgba(255, 255, 255, 0.08)</code>',
+            ],
+            [
+              '<code>--tt-donut-track</code>',
+              '<code>rgba(0, 0, 0, 0.12)</code>',
+              '<code>rgba(255, 255, 255, 0.12)</code>',
+            ],
+          ]"
+        />
+
+        <h3>Overflow Pill Variables</h3>
+        <ApiTable
+          caption="Overflow Pill Variables"
+          :headers="['Variable', 'Default', 'Dark Mode']"
+          :rows="[
+            ['<code>--tt-overflow-color</code>', '<code>#4b5563</code>', '<code>#d1d5db</code>'],
+            [
+              '<code>--tt-overflow-hover-color</code>',
+              '<code>#111827</code>',
+              '<code>#f9fafb</code>',
+            ],
+            ['<code>--tt-overflow-bg</code>', '<code>#fff</code>', '<code>#1f2937</code>'],
+            [
+              '<code>--tt-overflow-border</code>',
+              '<code>rgba(0, 0, 0, 0.06)</code>',
+              '<code>rgba(255, 255, 255, 0.08)</code>',
+            ],
+            [
+              '<code>--tt-overflow-shadow</code>',
+              '<code>0 2px 6px rgba(0, 0, 0, 0.1)</code>',
+              '<code>0 2px 6px rgba(0, 0, 0, 0.3)</code>',
+            ],
+          ]"
+        />
       </DocSection>
 
       <DocSection id="api" heading="API reference">
         <h3>Functions</h3>
-        <ApiTable caption="Exported functions" :headers="['Export', 'Signature']" :rows="[
-          ['<code>chyrp</code>', '<code>(opts: ToastOptions) =&gt; ToastHandle</code>'],
-          [
-            '<code>chyrp.info</code> · <code>warning</code> · <code>error</code> · <code>loading</code>',
-            '<code>(body: string, opts?: ToastOptions) =&gt; ToastHandle</code>',
-          ],
-          [
-            '<code>chyrp.promise</code>',
-            '<code>&lt;T&gt;(p: Promise&lt;T&gt;, opts: PromiseOptions&lt;T&gt;) =&gt; ToastHandle</code>',
-          ],
-          ['<code>configure</code>', '<code>(opts: ToastConfig) =&gt; void</code>'],
-          ['<code>dismissAll</code>', '<code>() =&gt; void</code>'],
-          ['<code>dismissChannel</code>', '<code>(name: string) =&gt; void</code>'],
-          [
-            '<code>interceptAlert</code>',
-            '<code>() =&gt; () =&gt; void</code> (returns a restore function)',
-          ],
-        ]" />
+        <ApiTable
+          caption="Exported functions"
+          :headers="['Export', 'Signature']"
+          :rows="[
+            ['<code>chyrp</code>', '<code>(opts: ToastOptions) =&gt; ToastHandle</code>'],
+            [
+              '<code>chyrp.info</code> · <code>warning</code> · <code>error</code> · <code>loading</code>',
+              '<code>(body: string, opts?: ToastOptions) =&gt; ToastHandle</code>',
+            ],
+            [
+              '<code>chyrp.promise</code>',
+              '<code>&lt;T&gt;(p: Promise&lt;T&gt;, opts: PromiseOptions&lt;T&gt;) =&gt; ToastHandle</code>',
+            ],
+            ['<code>configure</code>', '<code>(opts: ToastConfig) =&gt; void</code>'],
+            ['<code>dismissAll</code>', '<code>() =&gt; void</code>'],
+            ['<code>dismissChannel</code>', '<code>(name: string) =&gt; void</code>'],
+            [
+              '<code>interceptAlert</code>',
+              '<code>() =&gt; () =&gt; void</code> (returns a restore function)',
+            ],
+          ]"
+        />
 
         <h3>ToastOptions</h3>
-        <ApiTable caption="ToastOptions fields" :headers="['Field', 'Type', 'Default', 'Notes']" :rows="[
-          ['<code>title</code>', '<code>string</code>', '—', 'Bold heading above the body'],
-          ['<code>body</code>', '<code>string</code>', '—', 'Main message'],
-          [
-            '<code>style</code>',
-            `<code>'info' | 'warning' | 'error' | 'loading'</code>`,
-            `<code>'info'</code>`,
-            'Visual style and default icon',
-          ],
-          [
-            '<code>timeout</code>',
-            '<code>number</code>',
-            '<code>4000</code>',
-            'Ms before auto-dismiss; <code>0</code> disables',
-          ],
-          [
-            '<code>persistent</code>',
-            '<code>boolean</code>',
-            '<code>false</code>',
-            'Equivalent to <code>timeout: 0</code>',
-          ],
-          [
-            '<code>debounce</code>',
-            '<code>number</code>',
-            '<code>100</code>',
-            'Ms to suppress identical follow-up toasts',
-          ],
-          ['<code>swipe</code>', '<code>boolean</code>', '<code>true</code>', 'Allow swipe-to-dismiss'],
-          [
-            '<code>pauseOnHover</code>',
-            '<code>boolean</code>',
-            '<code>true</code>',
-            'Pause timer on hover/focus (desktop only)',
-          ],
-          [
-            '<code>position</code>',
-            '<code>ToastPosition</code>',
-            `<code>'top-right'</code>`,
-            `Mobile forces <code>bottom-center</code>`,
-          ],
-          [
-            '<code>channel</code>',
-            '<code>string</code>',
-            '—',
-            'Tag for grouping; rendered as a label',
-          ],
-          [
-            '<code>icon</code>',
-            '<code>string | HTMLElement | false</code>',
-            '—',
-            'Custom icon (text, cloned DOM, or hide)',
-          ],
-          [
-            '<code>actions</code>',
-            '<code>ToastAction[]</code>',
-            '—',
-            'Buttons rendered below the body',
-          ],
-          [
-            '<code>sound</code>',
-            `<code>boolean | 'gentle' | 'alert' | 'success' | 'error' | string</code>`,
-            '<code>true</code>',
-            'Named chime, URL, or <code>true</code> for style default',
-          ],
-          [
-            '<code>resound</code>',
-            '<code>boolean</code>',
-            '<code>false</code>',
-            'Replay sound when <code>update()</code> changes style',
-          ],
-          [
-            '<code>max</code>',
-            '<code>number</code>',
-            '—',
-            '(loading) Total work units for determinate donut',
-          ],
-          [
-            '<code>value</code>',
-            '<code>number</code>',
-            '<code>0</code>',
-            '(loading) Current progress',
-          ],
-        ]" />
+        <ApiTable
+          caption="ToastOptions fields"
+          :headers="['Field', 'Type', 'Default', 'Notes']"
+          :rows="[
+            ['<code>title</code>', '<code>string</code>', '—', 'Bold heading above the body'],
+            ['<code>body</code>', '<code>string</code>', '—', 'Main message'],
+            [
+              '<code>style</code>',
+              `<code>'info' | 'warning' | 'error' | 'loading'</code>`,
+              `<code>'info'</code>`,
+              'Visual style and default icon',
+            ],
+            [
+              '<code>timeout</code>',
+              '<code>number</code>',
+              '<code>4000</code>',
+              'Ms before auto-dismiss; <code>0</code> disables',
+            ],
+            [
+              '<code>persistent</code>',
+              '<code>boolean</code>',
+              '<code>false</code>',
+              'Equivalent to <code>timeout: 0</code>',
+            ],
+            [
+              '<code>debounce</code>',
+              '<code>number</code>',
+              '<code>100</code>',
+              'Ms to suppress identical follow-up toasts',
+            ],
+            [
+              '<code>swipe</code>',
+              '<code>boolean</code>',
+              '<code>true</code>',
+              'Allow swipe-to-dismiss',
+            ],
+            [
+              '<code>pauseOnHover</code>',
+              '<code>boolean</code>',
+              '<code>true</code>',
+              'Pause timer on hover/focus (desktop only)',
+            ],
+            [
+              '<code>position</code>',
+              '<code>ToastPosition</code>',
+              `<code>'top-right'</code>`,
+              `Mobile forces <code>bottom-center</code>`,
+            ],
+            [
+              '<code>channel</code>',
+              '<code>string</code>',
+              '—',
+              'Tag for grouping; rendered as a label',
+            ],
+            [
+              '<code>icon</code>',
+              '<code>string | HTMLElement | false</code>',
+              '—',
+              'Custom icon (text, cloned DOM, or hide)',
+            ],
+            [
+              '<code>actions</code>',
+              '<code>ToastAction[]</code>',
+              '—',
+              'Buttons rendered below the body',
+            ],
+            [
+              '<code>sound</code>',
+              `<code>boolean | 'gentle' | 'alert' | 'success' | 'error' | string</code>`,
+              '<code>true</code>',
+              'Named chime, URL, or <code>true</code> for style default',
+            ],
+            [
+              '<code>resound</code>',
+              '<code>boolean</code>',
+              '<code>false</code>',
+              'Replay sound when <code>update()</code> changes style',
+            ],
+            [
+              '<code>max</code>',
+              '<code>number</code>',
+              '—',
+              '(loading) Total work units for determinate donut',
+            ],
+            [
+              '<code>value</code>',
+              '<code>number</code>',
+              '<code>0</code>',
+              '(loading) Current progress',
+            ],
+          ]"
+        />
 
         <h3>PromiseOptions&lt;T = unknown, E = unknown&gt;</h3>
-        <ApiTable caption="PromiseOptions fields" :headers="['Field', 'Type', 'Default', 'Description']" :rows="[
-          ['<code>loading</code>', '<code>PromiseValueSpec&amp;lt;void&amp;gt;</code>', '—', 'Text to display while the Promise is waiting to resolve or reject.'],
-          ['<code>success</code>', '<code>PromiseValueSpec&amp;lt;T&amp;gt;</code>', '—', 'Text or options to show if the Promise resolves.'],
-          ['<code>error</code>', '<code>PromiseValueSpec&amp;lt;E&amp;gt;</code>', '—', 'Text or options to show if the Promise rejects.'],
-        ]" />
+        <ApiTable
+          caption="PromiseOptions fields"
+          :headers="['Field', 'Type', 'Default', 'Description']"
+          :rows="[
+            [
+              '<code>loading</code>',
+              '<code>PromiseValueSpec&amp;lt;void&amp;gt;</code>',
+              '—',
+              'Text to display while the Promise is waiting to resolve or reject.',
+            ],
+            [
+              '<code>success</code>',
+              '<code>PromiseValueSpec&amp;lt;T&amp;gt;</code>',
+              '—',
+              'Text or options to show if the Promise resolves.',
+            ],
+            [
+              '<code>error</code>',
+              '<code>PromiseValueSpec&amp;lt;E&amp;gt;</code>',
+              '—',
+              'Text or options to show if the Promise rejects.',
+            ],
+          ]"
+        />
 
         <h3>ToastHandle</h3>
-        <ApiTable caption="ToastHandle methods" :headers="['Method', 'Signature']" :rows="[
-          ['<code>dismiss</code>', '<code>() =&gt; void</code>'],
-          ['<code>update</code>', '<code>(opts: ToastOptions) =&gt; ToastHandle</code>'],
-        ]" />
-
+        <ApiTable
+          caption="ToastHandle methods"
+          :headers="['Method', 'Signature']"
+          :rows="[
+            ['<code>dismiss</code>', '<code>() =&gt; void</code>'],
+            ['<code>update</code>', '<code>(opts: ToastOptions) =&gt; ToastHandle</code>'],
+          ]"
+        />
       </DocSection>
     </main>
   </div>
@@ -893,10 +1092,6 @@ onMounted(() => {
     grid-template-columns: minmax(0, 1fr);
     gap: 24px;
     padding: 32px 0 64px;
-  }
-
-  .toc {
-    display: none;
   }
 }
 
@@ -924,17 +1119,6 @@ kbd {
   box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
   min-width: 28px;
   text-align: center;
-}
-
-@media (prefers-color-scheme: dark) {
-  html:not(.light) .kbd-list li {
-    color: var(--muted);
-  }
-
-  html:not(.light) kbd {
-    color: var(--text);
-    background: var(--surface);
-  }
 }
 
 html.dark .kbd-list li {

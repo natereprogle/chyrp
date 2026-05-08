@@ -90,7 +90,6 @@
 @media (max-width: 600px) {
   .toast-container {
     top: auto !important;
-    bottom: 12px !important;
     left: 12px !important;
     right: 12px !important;
     transform: none !important;
@@ -371,7 +370,7 @@
 
 .toast-progress-fill {
   height: 100%;
-  width: 0%;
+  width: 0;
   background: currentColor;
   opacity: 0.5;
 }
