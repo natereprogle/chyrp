@@ -6,7 +6,7 @@
 
 **Toasts that get your attention.**
 
-Chyrp (Pronounced "Chirp") is a tiny, dependency-free toast notification library. Ships with stacking, swipe-to-dismiss, pause-on-hover, sound, promise integration, and a determinate progress donut for loading states — all in around 30 kB of unminified, sourcemapped JS.
+Chyrp (Pronounced "Chirp") is a tiny, dependency-free toast notification library. Ships with stacking, swipe-to-dismiss, pause-on-hover, sound, promise integration, and much more — all in around 30 kB of unminified, sourcemapped JS.
 
 - Zero runtime dependencies
 - ESM, CJS, and IIFE bundles (~6kB gzipped/ea.\*)
