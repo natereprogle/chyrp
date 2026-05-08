@@ -17,6 +17,37 @@ Chyrp (Pronounced "Chirp") is a tiny, dependency-free toast notification library
 
 <sup>\* Not including CSS or optional source maps. CSS is mandatory and adds an additional 3 kB (gzipped) to overall size</sup>
 
+<details>
+
+<summary>Why <em><strong>another</strong></em> library?</summary>
+
+Let's get something out of the way: you don't *have* to use it. I **promise** that other toast libraries exist which will meet your needs. [Sonner](https://github.com/emilkowalski/sonner), [Toast-JS](https://github.com/SoufianoDev/Toast-JS), [Toastify-JS](https://github.com/apvarun/toastify-js), [not-a-toast](https://github.com/shaiksharzil/not-a-toast), [Notyf](https://github.com/caroso1222/notyf), and the list goes on and on. So, why make another? Well, for a few reasons.
+
+1. **Necessity** — I'm working on a legacy application which, without getting into technical details, limits our ability to use pretty much any existing library made in the past few years. The project doesn't use React, so Sonner is a non-starter.
+2. **Lightweight** — I wanted Chyrp to be feature-packed while still maintaining a tiny footprint. While it's not the smallest library from the list above, it does manage to stay relatively tiny. Chyrp is as "large" as it is because it considers styling secondary and puts features and usability first. Chyrp doesn't offer "themes" or animations like other libraries do. Instead, Chyrp aims to be the best at what it does. This isn't to say other libraries are "worse", they just might not be the right tool for the job.
+
+| Library     | CSS Size<sup>[1]</sup>                  | JS Size<sup>[1]</sup>  | Total Size  |
+|-------------|-----------------------------------------|------------------------|-------------|
+| Toastify-JS | 1.91kB                                  | 3.45kB                 | 5.36kB      |
+| Notyf       | 2.41kB                                  | 3.58kB                 | 5.99kB      |
+| **Chyrp**   | **3.32kB (not yet minified in builds)** | **6.79kB**             | **10.11kB** |
+| not-a-toast | 4.68kB                                  | 6.30kB                 | 10.98kB     |
+| Toast-JS    | ??                                      | ~50kB<sup>[2]</sup>    | ~50kB       |
+
+3. **Feature Packed** — Like I mentioned previously, I wanted Chyrp to have all the features you'd need from a toast library. Chyrp has 16 configurable options, and supports additional features to allow each toast to behave as it should. Some of my favorite features which are not commonly seen in other libraries include:
+    * **Sound** — Notifications are meant to get your attention. If you are sending toast messages to users, it's implied you _want_ them to know what's going on, no? Toast notifications are meant for brief messages to be immediately delivered to a user, sound assists with that. Chyrp is the first toast library I've seen that provides audio for toasts, **and** it's the first I've seen to use the Web Audio API to synthesize that audio on the fly. When I designed Chyrp, I made the (arguably radical) decision to enable audio by default. However, it can be disabled entirely.
+    * **Debouncing** — Duplicate toasts sent within a specified amount of time will be debounced and only display the original. Configurable **per toast**.
+    * **In-Place Updates** — Each toast returns a `ToastHandle` when created, which allows you to update *that specific toast* when needed. You are able to change the style, title, body, and virtually any value on that toast _without_ being required to create a new one or "replace" it within the DOM.
+    * **`alert()` Replacement** — Chyrp allows you to replace the native `window.alert()` method, so even if you have a legacy codebase with `alert()` used for notifications, Chyrp will display a nice `info` style toast instead. Soon, `confirm()` will also be replaceable, automatically handling applying actions to `info` style toasts. Plus, using a toast as opposed to `alert()` or `confirm()` will prevent browsers ignoring in-page dialogs from hiding your messages, which might be important! Of course, this is opt-in and you can restore `window.alert()` if you like later to its native functionality.
+5. **Accessibility** — While many of the larger Toast libraries have implemented ARIA tags, some have not. Another feature that many toast libraries seem to omit is support for Reduced Motion, which should be used to limit animations & effects. Chyrp ensures that Toasts are fully accessible and adhere to `prefers-reduced-motion: reduce;`, and I'm working on improving its accessibility even more.
+6. **Mobile Support** — Many libraries support mobile, but that support is limited. Some libraries don't handle touch properly, while others don't format toasts to be mobile-friendly. Chyrp ensures that mobile is handled natively, properly capturing pointer events and provide larger touch targets for toasts. Since toasts can be dismissed by clicking/tapping anywhere within them, as opposed to being required to click an x or close icon, this makes them very user & mobile friendly!
+7. **More Options** — Having options is never necessarily a bad thing. I've written my own toast libraries (besides this one) in the past because for projects because existing options didn't give me what I was looking for, or were too hard - or impossible - to extend to add, remove, or fix what I wanted added, removed, or fixed. Chyrp adds yet another option to the mix, which allows for developers to have more options if they don't like or can't use existing libraries.
+
+<sup>[1] "Size" references to the _transferred_ size, not _decompressed_ size. Obtained on May 8th, 2026. Data obtained by opening each library's provided CDN link in a new tab in Firefox 151.0b7 with cache disabled and reviewing the "Transferred" value within the network inspector.</sup><br />
+<sup>[2] Toast-JS provides its CSS within its JS. As well, it's unminified, which **will** affect transfer size.</sup>
+
+</details>
+
 ## Install
 
 ```bash
@@ -245,15 +276,14 @@ Targets ES2022. Pointer events are required for swipe-to-dismiss; if `PointerEve
 
 ## Demo
 
-A full interactive demo + docs site lives under [`demo/`](demo/). After cloning:
+A full interactive demo + docs site lives under `demo/`. After cloning:
 
 ```bash
 npm install
-npm run build           # produces dist/ that the demo loads
-open demo/index.html    # or run `npm run demo` to serve at http://localhost:3000/demo/
+npm run demo # builds the app, served at http://localhost:5173/
 ```
 
-Every feature in this README has a runnable example there.
+When the demo is running, the library and docs site is rebuilt/refreshed upon modification. The docs are also exposed to your LAN for testing on mobile. Every feature in this README has a runnable example there.
 
 ## License
 
