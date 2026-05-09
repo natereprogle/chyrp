@@ -395,7 +395,7 @@ const features: {
 </script>
 
 <template>
-  <section class="hero" aria-labelledby="hero-heading">
+  <section class="hero" aria-labelledby="hero-heading" id="main-content">
     <div class="hero-bg-toasts" aria-hidden="true">
       <div v-for="(t, i) in bgToasts" :key="i" class="hero-bg-toast-wrap"
         :style="{ top: t.top, left: t.left, transform: `rotate(${t.rotation})` }">
@@ -515,11 +515,6 @@ const features: {
   user-select: none;
 }
 
-.hero-bg-toast-wrap .toast {
-  cursor: default;
-  transition: none;
-}
-
 .hero {
   padding: 96px 0 72px;
   background:
@@ -576,7 +571,6 @@ const features: {
 .hero-meta {
   font-size: 13px;
   color: var(--soft);
-  margin: 0;
   padding: 0 16px;
   word-break: break-word;
   width: max-content;
@@ -728,6 +722,7 @@ const features: {
 }
 
 @media (prefers-color-scheme: dark) {
+  /*noinspection ALL*/
   html:not(.light) .hero {
     background:
       radial-gradient(ellipse 80% 50% at 50% 0%, rgba(59, 130, 246, 0.12), transparent 60%),

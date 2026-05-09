@@ -10,7 +10,26 @@ export default defineConfig({
   plugins: [vue(), vueDevTools()],
   resolve: {
     alias: [
-      { find: 'chyrp/style.css', replacement: fileURLToPath(new URL('../src/style.css', import.meta.url)) },
+      {
+        find: 'chyrp/style.css',
+        replacement: fileURLToPath(new URL('../src/style.css', import.meta.url)),
+      },
+      {
+        find: 'chyrp/style-rounded.css',
+        replacement: fileURLToPath(new URL('../src/style-rounded.css', import.meta.url)),
+      },
+      {
+        find: 'chyrp/style-material.css',
+        replacement: fileURLToPath(new URL('../src/style-material.css', import.meta.url)),
+      },
+      {
+        find: 'chyrp/style-premium-dark.css',
+        replacement: fileURLToPath(new URL('../src/style-premium-dark.css', import.meta.url)),
+      },
+      {
+        find: 'chyrp/style-glassmorphism.css',
+        replacement: fileURLToPath(new URL('../src/style-glassmorphism.css', import.meta.url)),
+      },
       { find: 'chyrp', replacement: fileURLToPath(new URL('../src/index.ts', import.meta.url)) },
       { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
     ],

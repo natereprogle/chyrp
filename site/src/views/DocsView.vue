@@ -88,7 +88,7 @@ const showAtPosition = () => {
 
 const showTiming = (timeout: number | null) => {
   if (timeout === null) {
-    chyrp.info('Persistent — click or swipe to dismiss', { persistent: true })
+    chyrp.info('Persistent — click or swipe to dismiss', { persistent: true, title: "Testing" })
     return
   }
   if (timeout === 1500) chyrp.info('Quick — gone in 1.5s', { timeout: 1500 })

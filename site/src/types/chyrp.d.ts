@@ -97,3 +97,7 @@ declare module 'chyrp' {
 }
 
 declare module 'chyrp/style.css'
+declare module 'chyrp/style-glassmorphism.css'
+declare module 'chyrp/style-material.css'
+declare module 'chyrp/style-premium-dark.css'
+declare module 'chyrp/style-rounded.css'

@@ -10,5 +10,11 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   treeshake: true,
-  copy: [{ from: 'src/style.css', to: 'dist' }],
+  copy: [
+    { from: 'src/style.css', to: 'dist' },
+    { from: 'src/style-rounded.css', to: 'dist' },
+    { from: 'src/style-glassmorphism.css', to: 'dist' },
+    { from: 'src/style-material.css', to: 'dist' },
+    { from: 'src/style-premium-dark.css', to: 'dist' },
+  ],
 });
